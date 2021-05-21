@@ -1,29 +1,17 @@
 // Dependencies
 const fs = require("fs");
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
 const util = require("util");
 
 // Sets up the Express App
 
 const app = express();
-const PORT = process.env.PORT || 4000;// need for heroku or 3rd party service
+const PORT = process.env.PORT || 4000; // need for heroku or 3rd party service
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-
-
-// const characters = [
-//   {
-//     routeName: 'yoda',
-//     name: 'Yoda',
-//     role: 'Jedi Master',
-//     age: 900,
-//     forcePoints: 2000,
-//   },
-// ];
 
 // Routes
 
@@ -38,15 +26,15 @@ app.use(express.json());
 // - `POST /api/notes` should receive a new note to save on the request body, add it to the `db.json` file, and then return the new note to the client. You'll need to find a way to give each note a unique id when it's saved (look into `npm` packages that could do this for you).
 
 // Basic route that sends the user first to the AJAX Page
-app.get('/*', (req, res) => res.sendFile(path.join(__dirname, './public/index.html')));
+app.get("/*", (req, res) =>
+  res.sendFile(path.join(__dirname, "./public/index.html"))
+);
 
-app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, './public/notes.html')));
+app.get("/notes", (req, res) =>
+  res.sendFile(path.join(__dirname, "./public/notes.html"))
+);
 
-
-app.get('/api/notes', (req, res) => res.readFile(notes));
-
-
-
+app.get("/api/notes", (req, res) => res.readFile(notes));
 
 // Displays a single character, or returns false
 
@@ -55,7 +43,7 @@ app.get('/api/notes', (req, res) => res.readFile(notes));
 
 //   console.log(chosen); Star
 
-  /* Check each character routeName and see if the same as "chosen"
+/* Check each character routeName and see if the same as "chosen"
    If the statement is true, send the character back as JSON,
    otherwise tell the user no character was found */
 
@@ -69,14 +57,14 @@ app.get('/api/notes', (req, res) => res.readFile(notes));
 // });
 
 // Create New Characters - takes in JSON input
-app.post('/api/notes', (req, res) => {
+app.post("/api/notes", (req, res) => {
   // req.body hosts is equal to the JSON post sent from the user
   // This works because of our body parsing middleware
   const newCharacter = req.body;
 
   // Using a RegEx Pattern to remove spaces from newCharacter
   // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-  newCharacter.routeName = newCharacter.name.replace(/\s+/g, '').toLowerCase();
+  newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
   console.log(newCharacter);
 
   characters.push(newCharacter);
