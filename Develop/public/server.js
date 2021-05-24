@@ -1,15 +1,16 @@
-// Dependencies
 const fs = require("fs");
 const express = require("express");
 const path = require("path");
 const util = require("util");
+const db = require("../db/db.json");
+
+const writeFileAsync = util.promisify(fs.writeFile);
 
 // Sets up the Express App
 
 const app = express();
 const PORT = process.env.PORT || 4000; // need for heroku or 3rd party service
 
-// Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -27,50 +28,29 @@ app.use(express.json());
 
 // Basic route that sends the user first to the AJAX Page
 app.get("/*", (req, res) =>
-  res.sendFile(path.join(__dirname, "./public/index.html"))
+  res.sendFile(path.join(__dirname, "../public/index.html"))
 );
 
 app.get("/notes", (req, res) =>
-  res.sendFile(path.join(__dirname, "./public/notes.html"))
+  res.sendFile(path.join(__dirname, "../public/notes.html"))
 );
 
-app.get("/api/notes", (req, res) => res.readFile(notes));
+app.get("/api/notes", (req, res) => res.readFile(db.json));
 
-// Displays a single character, or returns false
-
-// app.get('/api/characters/:character', (req, res) => {
-//   const chosen = req.params.character;
-
-//   console.log(chosen); Star
-
-/* Check each character routeName and see if the same as "chosen"
-   If the statement is true, send the character back as JSON,
-   otherwise tell the user no character was found */
-
-//   for (let i = 0; i < characters.length; i++) {
-//     if (chosen === characters[i].routeName) {
-//       return res.json(characters[i]);
-//     }
-//   }
-
-//   return res.json(false); STAR
-// });
-
-// Create New Characters - takes in JSON input
 app.post("/api/notes", (req, res) => {
-  // req.body hosts is equal to the JSON post sent from the user
-  // This works because of our body parsing middleware
-  const newCharacter = req.body;
-
-  // Using a RegEx Pattern to remove spaces from newCharacter
-  // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-  newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
-  console.log(newCharacter);
-
-  characters.push(newCharacter);
-  res.json(newCharacter);
+  const newNote = req.body;
 });
 
-// Starts the server to begin listening
+class DB {
+  read() {
+    return readFileAsync("db/db.json", "utf8");
+  }
+  write() {
+    return writeFileAsync();
+  };
+}
+
+// DB.read();
+// DB.write();
 
 app.listen(PORT, () => console.log(`App listening on PORT ${PORT}`));
